@@ -13,7 +13,9 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 @csrf_exempt
 def index(request):
   if request.method == 'POST':
-      signature = request.META['HTTP_X_LINE_SIGNATURE']
+      # get X-Line-Signature header value
+      signature = request.headers['X-Line-Signature']
+      
       body = request.body.decode('utf-8')
 
       try:
