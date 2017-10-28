@@ -32,11 +32,13 @@ def get_env_variable(var_name):
 
 try:
     SECRET_KEY = get_env_variable('SECRET_KEY')
+    LINE_CHANNEL_SECRET = get_env_variable('LINE_CHANNEL_SECRET')
+    LINE_CHANNEL_ACCESS_TOKEN = get_env_variable('LINE_CHANNEL_ACCESS_TOKEN')
 except ImproperlyConfigured:
     SECRET_KEY = '67$-4=8jt+b6uh-0)+)^%wg4d%gnzm((=6enl0q8vu@e0(!t*y'
+    LINE_CHANNEL_SECRET = 'dummy-line-channel-secret'
+    LINE_CHANNEL_ACCESS_TOKEN = 'dummy-line-channel-access-token'
 
-LINE_CHANNEL_SECRET = get_env_variable('LINE_CHANNEL_SECRET')
-LINE_CHANNEL_ACCESS_TOKEN = get_env_variable('LINE_CHANNEL_ACCESS_TOKEN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
