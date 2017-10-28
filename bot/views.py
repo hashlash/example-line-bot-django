@@ -13,9 +13,7 @@ parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
 @csrf_exempt
 def index(request):
   if request.method == 'POST':
-      # get X-Line-Signature header value
-      signature = request.headers['X-Line-Signature']
-      
+      signature = request.META['HTTP_X_LINE_SIGNATURE']
       body = request.body.decode('utf-8')
 
       try:
@@ -28,10 +26,15 @@ def index(request):
       for event in events:
           if isinstance(event, MessageEvent):
               if isinstance(event.message, TextMessage):
-                  line_bot_api.reply_message(
-                      event.reply_token,
-                      TextSendMessage(text=event.message.text)
-                  )
+                  try:
+                      line_bot_api.reply_message(
+                          event.reply_token,
+                          TextSendMessage(text=event.message.text)
+                      )
+                  except LineBotApiError as e:
+                      print(e.status_code)
+                      print(e.error.message)
+                      print(e.error.details)
 
       return HttpResponse()
   else:
