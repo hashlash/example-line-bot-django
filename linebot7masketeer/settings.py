@@ -11,21 +11,36 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PRODUCTION = os.environ.get('DATABASE_URL') != None
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '67$-4=8jt+b6uh-0)+)^%wg4d%gnzm((=6enl0q8vu@e0(!t*y'
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = 'Set the {} environment variable'.format(var_name)
+        raise ImproperlyConfigured(error_msg)
+
+try:
+    SECRET_KEY = get_env_variable('SECRET_KEY')
+except ImproperlyConfigured:
+    SECRET_KEY = '67$-4=8jt+b6uh-0)+)^%wg4d%gnzm((=6enl0q8vu@e0(!t*y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'linebot7masketeer.herokuapp.com',
+]
 
 
 # Application definition
@@ -80,6 +95,9 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+if PRODUCTION:
+    DATABASES['defaul'] = dj_database_url.config()
 
 
 # Password validation
